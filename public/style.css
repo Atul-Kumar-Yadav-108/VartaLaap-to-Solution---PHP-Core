@@ -1,0 +1,51 @@
+.mt-15 {
+  margin-top: 15px !important;
+}
+
+.mb-15 {
+  margin-bottom: 15px !important;
+}
+
+.text-center {
+  align-text: center !important;
+}
+.text-end {
+  align-text: end !important;
+}
+
+.active {
+  /* text-decoration: underline blue; */
+  border-bottom: 2px solid blue !important;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+#icon {
+  font-size: 30px;
+}
+
+#iconBtn {
+  position: absolute;
+  bottom: 0;
+  right: 35%;
+  background: white;
+  border-radius: 50%;
+}
+
+.post {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+#loader {
+  padding: 20px;
+  text-align: center;
+}
+
+.password-toggle {
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.password-toggle:hover {
+  color: #000;
+}
