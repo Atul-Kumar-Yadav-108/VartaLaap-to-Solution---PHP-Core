@@ -701,7 +701,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const searchPage = document.getElementById("searchPage");
   if (searchPage) {
     // const searchData = document.getElementById("search").value;
-    const searchData = new URLSearchParams(window.location.search);
+    const searchData = window.location.href.split("search=")[1];
     console.log(searchData);
     const result = await fetch(
       `${api}?task=searchData&search=${encodeURIComponent(searchData)}`,
