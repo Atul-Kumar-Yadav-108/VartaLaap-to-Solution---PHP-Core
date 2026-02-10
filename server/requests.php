@@ -602,6 +602,7 @@ if (isset($_POST['task']) && $_POST['task'] == "updateProfile") {
             "res_status" => true,
             "redirect" => "?profile=true"
         ]);
+        exit();
     } else {
         echo json_encode([
             "res_status" => false,
