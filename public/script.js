@@ -669,27 +669,38 @@ async function searchBtnFunction(e) {
     window.location.href = "../discuss";
     return;
   }
-  const result = await fetch(`${api}?task=searchData&search=${searchData}`);
-  const data = await result.json();
-  if (data.res_status) {
-    if (data.searchResult.length > 0) {
-      document.getElementById("feed").innerHTML = "";
-      data.searchResult.forEach((q) => {
-        const div = document.createElement("div");
-        div.className = "post";
-        div.innerHTML = `
+  window.location.href = `?searchPage=true&search=${encodeURIComponent(searchData)}`;
+}
+
+document.addEventListener("DOMContentLoaded", async function () {
+  const searchPage = document.getElementById("searchPage");
+  if (searchPage) {
+    // const searchData = document.getElementById("search").value;
+    const searchData = new URLSearchParams(window.location.search);
+    console.log(searchData);
+    const result = await fetch(`${api}?task=searchData&search=${searchData}`);
+    const data = await result.json();
+    if (data.res_status) {
+      if (data.searchResult.length > 0) {
+        console.log(data.searchResult);
+        document.getElementById("feed").innerHTML = "";
+        data.searchResult.forEach((q) => {
+          const div = document.createElement("div");
+          div.className = "post";
+          div.innerHTML = `
       <a href="?viewPage=true&questionid=${q.id}">
         <h3>${q.title}</h3>
       </a>
       <p>${q.description}</p>
     `;
-        document.getElementById("feed").appendChild(div);
-      });
-    } else {
-      document.getElementById("feed").innerHTML = `
+          document.getElementById("feed").appendChild(div);
+        });
+      } else {
+        document.getElementById("feed").innerHTML = `
       <p class="text-primary">Search : ${searchData}</p>
       <h3>No record found</h3>
       `;
+      }
     }
   }
-}
+});

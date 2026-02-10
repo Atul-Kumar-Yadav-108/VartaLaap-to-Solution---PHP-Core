@@ -83,6 +83,8 @@ if (isset($_GET['signup'])) {
             include("./client/viewquestion.php");
         } else if (isset($_GET['editQuesPage'])) {
             include("./client/editQuesPage.php");
+        } else if (isset($_GET['searchPage'])) {
+            include("./client/searchPage.php");
         } else {
             include("./client/pagenotfound.php");
         }
@@ -103,6 +105,8 @@ if (isset($_GET['signup'])) {
                 header("Location: ?login=true");
         } else if (isset($_GET['viewPage'])) {
             include("./client/viewquestion.php");
+        } else if (isset($_GET['searchPage'])) {
+            include("./client/searchPage.php");
         } else {
             include("./client/pagenotfound.php");
         }
