@@ -772,16 +772,28 @@ if (isset($_GET['task']) && $_GET['task'] == 'getQuestionsRespectiveUser') {
         echo json_encode(["error" => "User not found"]);
         exit;
     }
-    $getQuestStmt = $con->prepare('SELECT * from questions where user_id=?');
-    $getQuestStmt->bind_param("i", $userid['id']);
+    $getTotalQuestStmt = $con->prepare('SELECT * from questions where user_id=? ');
+    $getTotalQuestStmt->bind_param("i", $userid['id']);
+
+    $getTotalQuestStmt->execute();
+    $resultTotalQues = $getTotalQuestStmt->get_result();
+    $totalquestions = $resultTotalQues->fetch_all(MYSQLI_ASSOC);
+
+    $page = $_GET['page'] ?? 0;
+    $limit = 5;
+    $offset = $page * $limit;
+    $getQuestStmt = $con->prepare('SELECT * from questions where user_id=? LIMIT ?, ? ');
+    $getQuestStmt->bind_param("iii", $userid['id'], $offset, $limit);
 
     $getQuestStmt->execute();
     $resultQues = $getQuestStmt->get_result();
     $questions = $resultQues->fetch_all(MYSQLI_ASSOC);
+    $totalPage = intval(count($totalquestions) / $limit);
     if (count($questions) > 0) {
         echo json_encode([
             "res_status" => true,
-            "questions" => $questions
+            "questions" => $questions,
+            "totalPage" => $totalPage
         ]);
         // header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
@@ -796,7 +808,7 @@ if (isset($_GET['task']) && $_GET['task'] == 'getQuestionsRespectiveUser') {
 }
 
 
-// getQuestionsRespectiveUser
+// getQuestionsRespective
 
 if (isset($_GET['task']) && $_GET['task'] == 'getQuestionRespective') {
     $questionid = $_GET['questionid'] ?? "";

@@ -401,20 +401,29 @@ document.addEventListener("DOMContentLoaded", async function (e) {
 // view questions of respective user
 document.addEventListener("DOMContentLoaded", async function () {
   const viewQuestionsPage = document.getElementById("viewQuestionsPage");
-  const viewquestionBody = document.getElementById("viewquestionBody");
+
   if (!viewQuestionsPage) return;
   // console.log("first");
-  const result = await fetch(`${api}?task=getQuestionsRespectiveUser`);
-  const data = await result.json();
-  // console.log(data);
-  if (data.res_status) {
-    // console.log(data.questions);
+  Paginations(0);
+});
 
+async function Paginations(page) {
+  const viewquestionBody = document.getElementById("viewquestionBody");
+  const viewQuestionsPagination = document.getElementById(
+    "viewQuestionsPagination",
+  );
+  // let page = 0;
+  viewquestionBody.innerHTML = "";
+  const result = await fetch(
+    `${api}?task=getQuestionsRespectiveUser&page=${encodeURIComponent(page)}`,
+  );
+  const data = await result.json();
+  if (data.res_status) {
+    viewquestionBody.innerHTML = "";
     data.questions.forEach((question, index) => {
-      // console.log(question["title"]);
       viewquestionBody.innerHTML += `
         <tr>
-      <td scope="col">${index + 1}</td>
+      <td scope="col">${page * 5 + index + 1}</td>
       <td scope="col">${question["title"]}</td>
       <td scope="col">${question["description"].slice(0, 25)}...</td>
       <td scope="col">${question["category"]}</td>
@@ -426,6 +435,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     </tr>
       `;
     });
+    let buttons = ""; // empty string
+    for (let index = 0; index <= data.totalPage; index++) {
+      buttons += `<button type="button" class="me-1 btn btn-outline-primary ${index == page ? "active" : ""}" onclick="Paginations(${encodeURIComponent(index)})">${index + 1}</button>`;
+    }
+    viewQuestionsPagination.innerHTML = "";
+    viewQuestionsPagination.innerHTML = `
+    <tr >
+      <td >
+      <div class ="text-end px-5">
+      <button type="button" class="btn btn-outline-primary ${page == 0 ? "visually-hidden" : ""} inline-block" onclick="Paginations(${encodeURIComponent(page - 1)})">prev</button>
+      ${buttons}
+      <button type="button" class="btn btn-outline-primary ${data.totalPage == page ? "visually-hidden" : ""}" onclick="Paginations(${encodeURIComponent(page + 1)})">next</button>
+      </div>  
+    </td>
+    </tr>
+    `;
   } else {
     viewquestionBody.innerHTML += `
         <tr class="text-center">
@@ -437,7 +462,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     </tr>
       `;
   }
-});
+}
 
 // view question single
 // view questions of respective user
@@ -678,7 +703,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     // const searchData = document.getElementById("search").value;
     const searchData = new URLSearchParams(window.location.search);
     console.log(searchData);
-    const result = await fetch(`${api}?task=searchData&search=${searchData}`);
+    const result = await fetch(
+      `${api}?task=searchData&search=${encodeURIComponent(searchData)}`,
+    );
     const data = await result.json();
     if (data.res_status) {
       if (data.searchResult.length > 0) {

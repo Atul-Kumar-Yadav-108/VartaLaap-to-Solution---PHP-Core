@@ -14,5 +14,8 @@
             <tbody id="viewquestionBody">
             </tbody>
         </table>
+        <div id="viewQuestionsPagination" class="text-center mt-3">
+            <!-- Pagination buttons will be inserted here -->
+        </div>
     </div>
 </div>
