@@ -623,8 +623,7 @@ if (isset($_POST['profileSubmitBtn'])) {
     $user = $result->fetch_assoc();
 
     // print_r($_FILES["profile"]);
-    // print_r($user);
-    // exit();
+
 
     $target_dir = __DIR__ . "/../public/uploads/";
     $filename = $user['id'] . "_" . basename($_FILES["profile"]["name"]);
@@ -634,14 +633,34 @@ if (isset($_POST['profileSubmitBtn'])) {
 
     $check = getimagesize($_FILES["profile"]["tmp_name"]);
     if ($check === false) {
+        $_SESSION["flash_message"] = "Profile image uploaded";
+        $_SESSION["flash_status"] = "success";
+        echo json_encode([
+            "res_status" => false,
+        ]);
+        header("Location: ../?profile=true");
         $uploadOk = 0;
     }
 
-    if ($_FILES["profile"]["size"] > 500000) {
+    if ($_FILES["profile"]["size"] > (5 * 1024 * 1024)) {
+
+        $_SESSION["flash_message"] = "Image size is large";
+        $_SESSION["flash_status"] = "success";
+        echo json_encode([
+            "res_status" => false,
+        ]);
+        header("Location: ../?profile=true");
         $uploadOk = 0;
     }
 
     if (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
+
+        $_SESSION["flash_message"] = "Invalid image type";
+        $_SESSION["flash_status"] = "success";
+        echo json_encode([
+            "res_status" => true,
+        ]);
+        header("Location: ../?profile=true");
         $uploadOk = 0;
     }
 
@@ -653,10 +672,14 @@ if (isset($_POST['profileSubmitBtn'])) {
         if ($updateProfileImageStmt->execute()) {
             $_SESSION["flash_message"] = "Profile image uploaded";
             $_SESSION["flash_status"] = "success";
-
+            echo json_encode([
+                "res_status" => true,
+            ]);
             header("Location: ../?profile=true");
         }
+        exit();
     }
+    exit();
 }
 
 
