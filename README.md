@@ -41,6 +41,7 @@
 ## 📸 Screenshots
 
 > Add your project screenshots here
+> ![Home Page](discuss.png)
 
 ---
 
